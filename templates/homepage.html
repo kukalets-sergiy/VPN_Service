@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Title{% endblock %}</title>
+    <link rel="stylesheet" href="{% block stylesheet %}{% endblock %}">
+</head>
+<body>
+    <header>
+        <h1>{% block header %}VPN Service{% endblock %}</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/about/">About</a></li>
+                <li><a href="/contact/">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    {% if messages %}
+        <div class="messages">
+            <ul>
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    <main>
+        {% block content %}
+        <p>Main content of the page</p>
+        {% endblock %}
+    </main>
+
+    <footer>
+        <p>© 2024 Your Website Name. All rights reserved.</p>
+    </footer>
+</body>
+</html>

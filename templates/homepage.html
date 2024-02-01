@@ -1,22 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Title{% endblock %}</title>
-    <link rel="stylesheet" href="{% block stylesheet %}{% endblock %}">
-</head>
-<body>
+
     <header>
         <h1>{% block header %}VPN Service{% endblock %}</h1>
         <nav>
             <ul>
                 <li><a href="/">Home</a></li>
-                <li><a href="/about/">About</a></li>
-                <li><a href="/contact/">Contact</a></li>
+                <li><a href="/user-sites/">Website creation</a></li>
+                <li><a href="/registration/">Registration</a></li>
+                <li><a href="/logout/">Logout</a></li>
             </ul>
         </nav>
     </header>
+<body>
+            <div>
+                    <div onclick="redirectToProfilePictureUpload()">
+                        {% if request.user.profile_picture %}
+                            <img class="" src="{{ request.user.profile_picture.url }}" alt="user profile picture">
+                        {% endif %}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
+                            <circle cx="20" cy="20" r="20" fill="#4682B4"/>
+                            <path d="M26.7563 15.3683C27.0812 15.0433 27.0812 14.5017 26.7563 14.1934L24.8066 12.2437C24.4983 11.9188 23.9567 11.9188 23.6317 12.2437L22.0986 13.7685L25.2232 16.8931M12 23.8754V27H15.1246L24.34 17.7763L21.2154 14.6517L12 23.8754Z" fill="white"/>
+                        </svg>
+                    </div>
+                    <input type="file" id="file-input" style="display: none;">
+            </div><br><br>
+
 
     {% if messages %}
         <div class="messages">
@@ -30,12 +39,18 @@
 
     <main>
         {% block content %}
-        <p>Main content of the page</p>
+        <p>VPN Service</p>
         {% endblock %}
     </main>
 
     <footer>
-        <p>© 2024 Your Website Name. All rights reserved.</p>
+        <p>© 2024 VPN Service. All rights reserved.</p>
     </footer>
 </body>
 </html>
+
+<script>
+function redirectToProfilePictureUpload() {
+    window.location.href = "{% url 'vpn_service_app:upload_profile_picture' %}";
+}
+</script>

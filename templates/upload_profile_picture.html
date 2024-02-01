@@ -1,0 +1,140 @@
+{% block content %}
+  <div>
+    <div>
+      <button id="go-back-button" class="arrow-back-btn categories" onclick="window.location.href='/'">
+        <img src="/static/images/gobackarrow.svg" alt="Go Back" title="Go&nbsp;back">
+    </button>
+          <h2>Upload Profile Picture</h2>
+
+          <form method="post" enctype="multipart/form-data" class="upload-form">
+            {% csrf_token %}
+
+            <img id="profilePicturePreview" src="{% if form.instance.profile_picture %}{{ form.instance.profile_picture.url }}{% endif %}" alt="Profile Picture" width="150">
+            <input type="file" id="id_profile_picture" name="profile_picture" accept="image/*" style="display: none;">
+              <label for="id_profile_picture"><br><b>Push here to Choose a photo</b></label><br><br><br>
+            <div>
+              <button type="submit" class="upload-button">Upload</button>
+              <button type="button" class="upload-button" id="delete-button">Delete</button>
+            </div>
+          </form>
+
+
+    </div>
+  </div>
+<div>
+<div id="modal-overlay" style="display: none;">
+  <!--
+      The element with the id "modal-container" represents the container for the content of the modal window.
+      Inside this container are other elements of the modal window - the close button and the content of the modal window.
+    -->
+  <div id="modal-container">
+    <!--
+        The element with id "close-button" represents the button for closing the modal window.
+      -->
+    <span id="close-button">
+      <svg
+        class="close-modal-icon"
+        width="27"
+        height="27"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <!--
+          This code snippet contains an SVG image that is displayed on the close button of the modal window.
+        -->
+        <path d="m1 1 25 25M1 26 26 1" stroke="#fff" stroke-width="2" />
+        <!--
+          d is an attribute that defines commands for drawing
+          In this case, this SVG image contains two lines that form a cross to close the window.
+          The stroke and stroke-width attributes define the color and width of the lines.
+        -->
+      </svg>
+    </span>
+
+    <p id="modal-title">Are you sure you want to delete photo?</p>
+    <!-- The element with the id "modal-title" represents the title or question associated with the deletion.  -->
+    <div id="wrap-btn">
+      <!-- The element with the id "wrap-btn" is a container for the confirm and cancel buttons. -->
+    <button type="button" id="delete-confirm" class="btn-white btn-sm">
+        Delete
+    </button>
+
+      <button id="delete-cancel" class="btn btn-sm">Cancel</button>
+      <!-- The button with the id "delete-cancel" represents a button to cancel a delete.  -->
+    </div>
+  </div>
+        {% if messages %}
+            <div class="messages">
+                <ul>
+                    {% for message in messages %}
+                    <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+</div>
+
+<script>
+    // Function for previewing photo on file selection
+    document.getElementById("id_profile_picture").addEventListener("change", function () {
+        var preview = document.getElementById("profilePicturePreview");
+        var fileInput = this;
+
+        if (fileInput.files && fileInput.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+            }
+
+            reader.readAsDataURL(fileInput.files[0]);
+        }
+    });
+
+</script>
+<script>
+
+    // We wait for the DOM to finish loading before executing this code.
+  document.addEventListener("DOMContentLoaded", function () {
+    var modalOverlay = document.getElementById("modal-overlay");
+    var closeButton = document.getElementById("close-button");
+    var deleteConfirmButton = document.getElementById("delete-confirm");
+    var deleteCancelButton = document.getElementById("delete-cancel");
+
+    var deleteImageButton = document.getElementById("delete-button");
+
+    deleteImageButton.addEventListener("click", function () {
+    modalOverlay.style.display = "flex";
+});
+
+    closeButton.addEventListener("click", closeModal);
+    deleteCancelButton.addEventListener("click", closeModal);
+
+    function closeModal() {
+    modalOverlay.style.display = "none";
+}
+
+    deleteConfirmButton.addEventListener("click", function () {
+    var deleteUrl = "{% url 'vpn_service_app:delete_profile_picture' %}";
+    var formData = new FormData();
+    formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+    fetch(deleteUrl, {
+    method: "POST",
+    body: formData
+})
+    .then(response => {
+    if (response.ok) {
+    window.location.href = "{% url 'vpn_service_app:homepage' %}";
+} else {
+    console.error("Profile picture was not deleted: " + response.status);
+}
+})
+    .catch(error => {
+    console.error("Error in deleting profile picture: " + error);
+});
+});
+});
+</script>
+
+{% endblock content %}

@@ -1,0 +1,68 @@
+{% load static %}
+
+{% block content %}
+
+<div>
+        <button id="go-back-button" class="arrow-back-btn about" onclick="window.location.href='{% url 'vpn_service_app:user-sites' %}'">
+            <img src="{% static 'images/gobackarrow.svg' %}" alt="Go Back" title='Go back'/>
+        </button>
+    <form method="post">
+    {% csrf_token %}
+    <div>
+        <h3>Links</h3>
+        <div>
+            <h4>Select links to delete</h4><br>
+                <table>
+                    <tbody>
+                        {% for link in links %}
+                            <tr>
+                                <td>
+                                    <label>
+                                        <input type="checkbox" name="links_to_remove" value="{{ link.id }}">
+                                    </label>
+                                </td>
+                                <td>
+                                    {{ link.name }}
+                                    <a href="{{ link.url }}" target="_blank">{{ link.url }}</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+        </div>
+        <h4>Add new link</h4>
+        <label>Link name</label> {{form.name}}<br>
+        <label>Link url</label> {{form.url}}<br>
+    </div>
+
+            <div>
+                <button type="submit">Save changes</button>
+            </div>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    // Function for checking the completeness of fields
+    function checkFields() {
+        var name = $('#id_name').val();
+        var url = $('#id_url').val();
+
+        if (name && url) {
+            $('#add-link-btn').show(); // Show button if both fields are filled
+        } else {
+            $('#add-link-btn').hide(); // Hide the button if at least one of the fields is empty
+        }
+    }
+
+    // Call the function on page load
+    checkFields();
+
+    // Call the function when entering the fields
+    $('#id_name, #id_url').on('input', checkFields);
+});
+</script>
+
+
+{% endblock content %}

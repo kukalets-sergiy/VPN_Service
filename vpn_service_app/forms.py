@@ -1,5 +1,5 @@
 from django import forms
-from .models import UserData
+from .models import UserData, Site
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
 
@@ -28,4 +28,22 @@ class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = UserData
         fields = ("username", "email")  # Allow users to change their username and email only
+
+
+class ProfilePictureForm(forms.ModelForm):
+    class Meta:
+        model = UserData
+        fields = ("profile_picture",)
+
+
+class SiteCreateForm(forms.ModelForm):
+    class Meta:
+        model = Site
+        fields = ["name", "url"]
+
+    def __init__(self, *args, **kwargs):
+        super(SiteCreateForm, self).__init__(*args, **kwargs)
+        self.fields["name"].required = False
+        self.fields["url"].required = False
+
 

@@ -11,20 +11,21 @@
     <div>
         <h3>Links</h3>
         <div>
-            <h4>Select links to delete</h4><br>
+            <h4>Mark links to delete sites</h4><br>
+            <h5>These links work without a VPN</h5><br>
                 <table>
                     <tbody>
                         {% for link in links %}
                             <tr>
-                                <td>
-                                    <label>
-                                        <input type="checkbox" name="links_to_remove" value="{{ link.id }}">
-                                    </label>
-                                </td>
-                                <td>
-                                    {{ link.name }}
+                              <td>
+                                <label>
+                                    <input type="checkbox" name="links_to_remove" value="{{ link.id }}">
+                                </label>
+                              </td>
+                            <td>
+                                {{ link.name }}
                                     <a href="{{ link.url }}" target="_blank">{{ link.url }}</a>
-                                </td>
+                              </td>
                             </tr>
                         {% endfor %}
                     </tbody>

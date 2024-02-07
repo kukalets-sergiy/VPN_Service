@@ -82,6 +82,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+
 ROOT_URLCONF = 'vpn_service_core.urls'
 
 # Define the TEMPLATES list, which configures how Django handles templates.
@@ -143,6 +144,8 @@ DATABASES = {
     }
 }
 
+VPN_IP_ADDRESSES = os.getenv("VPN_IP_ADDRESSES")
+
 # Define an empty dictionary for the Django Rest Framework settings.
 REST_FRAMEWORK = {}
 
@@ -188,7 +191,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = '/static/'
+# This setting specifies the URL prefix for static files.
+# Static files are files that do not change and can be served directly by a web server.
+# In this case, the URL to access static files is "/static/".
+STATIC_URL = "/static/"
+
+# STATICFILES_DIRS is a list of directories where Django will look for additional static files.
+# It's a list of file system directories, and in this case, it's looking for static
+# files within "vpn_service_core/static/".
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "vpn_service_core/static/")]
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

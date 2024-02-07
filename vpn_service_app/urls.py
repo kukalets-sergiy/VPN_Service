@@ -9,6 +9,7 @@ from vpn_service_app.views import (
     UserSitesView,
     SiteCreateView,
     ProxyView,
+    StatisticsView,
 )
 
 
@@ -21,7 +22,9 @@ urlpatterns = [
     path("delete-profile-picture/", DeleteProfilePictureView.as_view(), name="delete_profile_picture"),
     path("user-sites/", UserSitesView.as_view(), name="user-sites"),
     path("site-create/", SiteCreateView.as_view(), name="site_create"),
-    path('proxy/<str:user_site_name>/<path:routes_on_original_site>/', ProxyView.as_view(), name='proxy_view'),
+    path("statistics/", StatisticsView.as_view(), name="statistics"),
+    path('<str:user_site_name>/<path:routes_on_original_site>/', ProxyView.as_view(), name='proxy_view'),
+
 ]
 
 app_name = "vpn_service_app"

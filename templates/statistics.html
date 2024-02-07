@@ -1,0 +1,47 @@
+{% load static %}
+
+{% block content %}
+
+        <button id="go-back-button" class="arrow-back-btn about" onclick="window.location.href='{% url 'vpn_service_app:homepage' %}'">
+            <img src="{% static 'images/gobackarrow.svg' %}" alt="Go Back" title='Go back'/>
+        </button>
+<head>
+    <meta charset="UTF-8">
+    <title>Site Statistics</title>
+</head>
+<body>
+    <h1>Site Statistics</h1>
+
+    <h2>Page Views Per Site via VPN</h2>
+    <table border="1">
+        <tr>
+            <th>Site</th>
+            <th>Total Page Views via VPN</th>
+        </tr>
+        {% for entry in statistics %}
+        <tr>
+            <td>{{ entry.site.name }}</td>
+            <td>{{ entry.page_views }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Data Usage Per Site</h2>
+    <table border="1">
+        <tr>
+            <th>Site</th>
+            <th>Total Data Sent(Bite)</th>
+            <th>Total Data Received(Bite)</th>
+        </tr>
+        {% for entry in statistics %}
+        <tr>
+            <td>{{ entry.site.name }}</td>
+            <td>{{ entry.data_sent }}</td>
+            <td>{{ entry.data_received }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
+
+{% endblock content %}

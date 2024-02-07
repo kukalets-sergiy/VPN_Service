@@ -1,0 +1,52 @@
+version: "3"
+services:   # Containers
+  db:   # PostgreSQL database service
+    image: postgres   # Docker image for PostgreSQL. A template that contains all the necessary files and settings to create a container.
+    restart: "on-failure"   # Restart policy for the container in case of failure
+    volumes:   # data volumes that can be mounted in a container. They allow you to store data outside the container itself
+      - db:/var/lib/postgresql   # Mounting a volume to persist PostgreSQL data
+    env_file:
+      - .env   # Loading environment variables from the .env file
+
+  web:   # Django web application service
+    build:   # Building the web service
+      context: .   # Using the current directory as build context
+      dockerfile: Dockerfile   # Using the specified Dockerfile for building
+    command: >
+      sh -c "
+             python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+#             gunicorn django_defenders_core.wsgi:application -b 0.0.0.0:8000"
+
+    # Running shell commands inside the container
+    # Applying database migrations
+    # Starting the Django development server
+
+    volumes:
+      - ./:/code   # Mounting the local directory to /code directory inside the container
+    restart: "on-failure"   # Restart policy for the container in case of failure
+    tty: true   # Allocating a pseudo-TTY for the container. The container will be able to interact with the user
+    stdin_open: true   # Keeping STDIN open even if not attached. Allows the container to receive input even if it is running in the background
+    ports:
+      - "8000:8000"   # Exposing port 8000 of the container to port 8000 of the host
+    env_file:
+      - .env   # Loading environment variables from the .env file
+    depends_on:
+      - db   # Making sure the web service starts after the db service
+
+  pg-admin:   # pgAdmin service
+    image: dpage/pgadmin4:latest   # Using the latest pgAdmin 4 image
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}   # Setting the default email for pgAdmin
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}   # Setting the default password for pgAdmin
+      - PGADMIN_LISTEN_PORT=${PGADMIN_LISTEN_PORT}   # Setting the port for pgAdmin to listen on
+    restart: "on-failure"   # Restart policy for the container in case of failure
+    ports:
+      - "8001:5050"   # Exposing port 5050 of the container to port 8001 of the host
+    depends_on:
+      - db   # Making sure pgAdmin starts after the db service
+
+volumes:
+  db:   # Defining a named volume for persisting PostgreSQL data
+
+

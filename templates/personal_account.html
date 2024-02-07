@@ -1,0 +1,21 @@
+{% extends 'homepage.html' %}
+
+
+
+{% block profiletitle %}About user{% endblock profiletitle %}
+
+
+{% block profilecontent %}
+<div class="account-info">
+    <div class="user-about-details">
+        <p>{{user.about_me}}
+        </p>
+    </div>
+    <div class="about-footer">
+        <ul>
+            <li>"Email address: "<span><a href="mailto:{{user.username}}">{{user.email}}</a></span></li>
+            <li>"Phone Number: "<span><a href="tel:{{user.phone_number}}">{{user.phone_number}}</a></span></li>
+        </ul>
+    </div>
+</div>
+{% endblock profilecontent %}

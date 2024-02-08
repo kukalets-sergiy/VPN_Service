@@ -151,7 +151,7 @@ class SiteCreateView(View):
             for link_id in links_to_remove:
                 link = get_object_or_404(Site, id=link_id)
                 link.delete()
-        name = request.POST.get("name").capitalize()
+        name = request.POST.get("name").title()
         if name:
             if Site.objects.filter(name=name).exists():
                 messages.error(request, "Such name already exist, try another name")
@@ -231,6 +231,7 @@ class ExternalSiteFetcherLink:
 
 class LinkReplacer:
     def __init__(self, html_content, vpn_route, site_name, site_url):
+        # Initialize LinkReplacer with HTML content, VPN route, site name, and site URL
         self.html_content = html_content
         self.vpn_route = vpn_route
         self.site_name = site_name
@@ -238,12 +239,19 @@ class LinkReplacer:
 
     def replace_links(self):
         try:
+            # Parse HTML content using BeautifulSoup
             soup = BeautifulSoup(self.html_content, 'html.parser')
+            # Find all <a> tags with href attribute
             external_links = soup.find_all('a', href=True)
+            # Iterate through each link found in the HTML content
             for link in external_links:
+                # Check if the link starts with 'http://' or 'https://'
                 if link['href'].startswith('http://') or link['href'].startswith('https://'):
+                    # Replace the link with VPN route, site name, site URL, and link URL
                     link['href'] = f"{self.vpn_route}/{self.site_name}/{self.site_url.split('//')[-1]}/{link['href'].split('//')[-1]}"
+                # Check if the link starts with '/'
                 if link['href'].startswith('/'):
+                    # Replace the link with VPN route, site name, site URL and link URL
                     link['href'] = f"{self.vpn_route}/{self.site_name}/{self.site_url.split('//')[-1]}{link['href']}"
 
             # external_css_links = soup.find_all('link', href=True)
@@ -281,38 +289,51 @@ class LinkReplacer:
                 if meta_link['content'].startswith('/'):
                     meta_link[
                         'content'] = f"{self.vpn_route}/{self.site_name}/{self.site_url.split('//')[-1]}{meta_link['content']}"
-
+            # Return the modified HTML content after link replacement
             return str(soup)
+        # Handle any exceptions that occur during link replacement
         except Exception as e:
             print("An error occurred while replacing links:", e)
+            # Return None if an error occurs
             return None
 
 
 class ProxyView(View):
     def get(self, request, user_site_name, routes_on_original_site):
         try:
+            # Get the site object based on the user_site_name from the database
             site = get_object_or_404(Site, name=user_site_name)
-            link_path = site.url.split('//')[-1].rstrip('/')
-            link_path_flash = site.url.split('//')[-1]
-            proxy_link = request.get_full_path().split(link_path_flash)[-1]
 
+            # Extract the path part of the site URL
+            link_path = site.url.split('//')[-1].rstrip('/')
+            link_path_slash = site.url.split('//')[-1]
+
+            # Extract the proxy link from the request's full path
+            proxy_link = request.get_full_path().split(link_path_slash)[-1]
+
+            # Fetch the HTML content of the original site
             external_site_fetcher = ExternalSiteFetcher(site.url)
             html_content = external_site_fetcher.fetch_html_content()
 
             if html_content:
+                # Replace links in the HTML content with the proxy route
                 link_replacer = LinkReplacer(html_content, "http://localhost:8000", user_site_name, link_path)
                 updated_html_content = link_replacer.replace_links()
 
+                # Check if the proxy link is in the updated HTML content
                 if proxy_link in updated_html_content:
+                    # Fetch HTML content for the proxy link
                     external_site_fetcher_link = ExternalSiteFetcherLink(site.url)
                     html_content_link = external_site_fetcher_link.fetch_html_content_link(proxy_link)
 
                     if html_content_link:
-                        link_replacer_link = LinkReplacer(html_content_link, "http://localhost:8000", user_site_name,
-                                                          link_path)
+                        # Replace links in the HTML content for the proxy link
+                        link_replacer_link = LinkReplacer(html_content_link, "http://localhost:8000",
+                                                          user_site_name, link_path)
                         updated_html_content_link = link_replacer_link.replace_links()
 
                         try:
+                            # Update statistics for the user and site
                             statistics_obj = Statistics.objects.get(user=request.user, site=site)
                             # Update the values
                             statistics_obj.page_views += 1

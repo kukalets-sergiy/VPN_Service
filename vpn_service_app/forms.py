@@ -41,9 +41,10 @@ class SiteCreateForm(forms.ModelForm):
         model = Site
         fields = ["name", "url"]
 
-    def __init__(self, *args, **kwargs):
-        super(SiteCreateForm, self).__init__(*args, **kwargs)
-        self.fields["name"].required = False
-        self.fields["url"].required = False
+    def clean_name(self):
+        name = self.cleaned_data.get('name')
+        if name:
+            name = name.title()
+        return name
 
 

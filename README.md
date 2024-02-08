@@ -1,4 +1,5 @@
 # VPN-Service
+
 Project Setup
 This project uses environment variables for configuring the connection to the PostgreSQL database and other configuration parameters.
 
@@ -20,8 +21,8 @@ PGADMIN_DEFAULT_EMAIL: The default email for PGAdmin.
 PGADMIN_DEFAULT_PASSWORD: The default password for PGAdmin.
 PGADMIN_LISTEN_PORT: The PGAdmin listening port.
 SECRET_KEY: The Django secret key.
-An example content of the .env file:
 
+An example content of the .env file:
 
 POSTGRES_HOST=localhost
 POSTGRES_USER=my_postgres_user
@@ -32,4 +33,3 @@ PGADMIN_DEFAULT_EMAIL=admin@example.com
 PGADMIN_DEFAULT_PASSWORD=admin_password
 PGADMIN_LISTEN_PORT=5050
 SECRET_KEY=<generated_secret_key>
-

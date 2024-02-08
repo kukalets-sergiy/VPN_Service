@@ -144,8 +144,6 @@ DATABASES = {
     }
 }
 
-VPN_IP_ADDRESSES = os.getenv("VPN_IP_ADDRESSES")
-
 # Define an empty dictionary for the Django Rest Framework settings.
 REST_FRAMEWORK = {}
 

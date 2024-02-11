@@ -33,15 +33,3 @@ PGADMIN_DEFAULT_EMAIL=admin@example.com
 PGADMIN_DEFAULT_PASSWORD=admin_password
 PGADMIN_LISTEN_PORT=5050
 SECRET_KEY=<generated_secret_key>
-
-Once you have created the .env file", to start the project, run the following command in your terminal: docker-compose -d up --build (you can also use docker-compose -d up). This will create containers, images and volumes based on docker-compose.yml file
-
-Once the project is running, you can access it by navigating to http://localhost:8000 in your web browser
-
-If you encounter any errors, you can use the following command to view the last 100 logs and potentially identify the problem:
-docker-compose -f docker-compose.yml logs --tail 100 web
-This command will display the last 100 logs from the 'web' container, which is typically where Django runs. You can analyze these logs to understand the cause of the issue and try to fix it.
-For more information about Docker and Docker Compose commands, you can refer to the Docker Documentation.
-
-
-

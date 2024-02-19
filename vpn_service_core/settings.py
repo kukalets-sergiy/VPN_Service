@@ -50,7 +50,7 @@ INSTALLED_APPS = [
 # The unique identifier for the Django site, typically corresponding to a record in the `django_site` database table.
 SITE_ID = 1
 
-SITE_URL = 'http://localhost:8000'
+SITE_URL = 'http://localhost:9000'
 
 
 # The method used for authentication, in this case, using the email address.

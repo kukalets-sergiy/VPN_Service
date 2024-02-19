@@ -15,8 +15,8 @@ services:   # Containers
     command: >
       sh -c "
              python manage.py migrate &&
-             python manage.py runserver 0.0.0.0:8000"
-#             gunicorn django_defenders_core.wsgi:application -b 0.0.0.0:8000"
+             python manage.py runserver 0.0.0.0:9000"
+#             gunicorn django_defenders_core.wsgi:application -b 0.0.0.0:9000"
 
     # Running shell commands inside the container
     # Applying database migrations
@@ -28,7 +28,7 @@ services:   # Containers
     tty: true   # Allocating a pseudo-TTY for the container. The container will be able to interact with the user
     stdin_open: true   # Keeping STDIN open even if not attached. Allows the container to receive input even if it is running in the background
     ports:
-      - "8000:8000"   # Exposing port 8000 of the container to port 8000 of the host
+      - "9000:9000"   # Exposing port 9000 of the container to port 9000 of the host
     env_file:
       - .env   # Loading environment variables from the .env file
     depends_on:
@@ -42,7 +42,7 @@ services:   # Containers
       - PGADMIN_LISTEN_PORT=${PGADMIN_LISTEN_PORT}   # Setting the port for pgAdmin to listen on
     restart: "on-failure"   # Restart policy for the container in case of failure
     ports:
-      - "8001:5050"   # Exposing port 5050 of the container to port 8001 of the host
+      - "9001:6050"   # Exposing port 5050 of the container to port 8001 of the host
     depends_on:
       - db   # Making sure pgAdmin starts after the db service
 

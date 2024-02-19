@@ -309,7 +309,7 @@ class ProxyView(View):
             link_path_slash = site.url.split('//')[-1]
 
             # Extract the proxy link from the request's full path
-            proxy_link = request.get_full_path().split(link_path_slash)[-1]
+            proxy_link = request.get_full_path().split(link_path)[-1]
 
             # Fetch the HTML content of the original site
             external_site_fetcher = ExternalSiteFetcher(site.url)
@@ -317,18 +317,19 @@ class ProxyView(View):
 
             if html_content:
                 # Replace links in the HTML content with the proxy route
-                link_replacer = LinkReplacer(html_content, "http://localhost:8000", user_site_name, link_path)
+                link_replacer = LinkReplacer(html_content, "http://localhost:9000", user_site_name, link_path)
                 updated_html_content = link_replacer.replace_links()
 
                 # Check if the proxy link is in the updated HTML content
                 if proxy_link in updated_html_content:
                     # Fetch HTML content for the proxy link
                     external_site_fetcher_link = ExternalSiteFetcherLink(site.url)
-                    html_content_link = external_site_fetcher_link.fetch_html_content_link(proxy_link)
+                    print(site.url + proxy_link, "----------------------------------------")
+                    html_content_link = external_site_fetcher_link.fetch_html_content_link(site.url + proxy_link)
 
                     if html_content_link:
                         # Replace links in the HTML content for the proxy link
-                        link_replacer_link = LinkReplacer(html_content_link, "http://localhost:8000",
+                        link_replacer_link = LinkReplacer(html_content_link, "http://localhost:9000",
                                                           user_site_name, link_path)
                         updated_html_content_link = link_replacer_link.replace_links()
 
